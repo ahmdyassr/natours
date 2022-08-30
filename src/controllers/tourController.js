@@ -12,7 +12,7 @@ const getAllTours = async (req, res) => {
 			}
 		})
 	} catch (e) {
-		res.status(500).json({
+		res.status(404).json({
 			status: 'fail',
 			message: e 
 		})
@@ -30,7 +30,7 @@ const createTour = async (req, res) => {
 			}
 		})
 	} catch(e) {
-		res.status(400).json({
+		res.status(404).json({
 			status: 'fail',
 			message: e
 		})
@@ -48,7 +48,7 @@ const getTour = async (req, res) => {
 			}
 		})
 	} catch (e) {
-		res.status(500).json({
+		res.status(404).json({
 			status: 'fail',
 			message: e
 		})
@@ -57,7 +57,10 @@ const getTour = async (req, res) => {
 
 const updateTour = async (req, res) => {
 	try {
-		const tour = await Tour.findByIdAndUpdate(req.params.id, req.body)
+		const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+			new: true,
+			runValidators: true
+		})
 
 		res.status(201).json({
 			status: 'success',
@@ -66,7 +69,7 @@ const updateTour = async (req, res) => {
 			}
 		})
 	} catch(e) {
-		res.status(500).json({
+		res.status(404).json({
 			status: 'fail',
 			message: e
 		})
@@ -75,16 +78,14 @@ const updateTour = async (req, res) => {
 
 const deleteTour = async (req, res) => {
 	try {
-		const tour = await Tour.findByIdAndDelete(req.params.id, req.body)
+		await Tour.findByIdAndDelete(req.params.id, req.body)
 
-		res.status(200).json({
+		res.status(204).json({
 			status: 'success',
-			data: {
-				tour
-			}
+			data: null
 		})
 	} catch(e) {
-		res.status(500).json({
+		res.status(404).json({
 			status: 'fail',
 			message: e
 		})
