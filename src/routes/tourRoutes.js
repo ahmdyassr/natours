@@ -1,10 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {checkID, checkBody, getAllTours, createTour, getTour, updateTour, deleteTour} = require('../controllers/tourController')
-
-
-router
-	.param('id', checkID) // Param middleware function
+const {getAllTours, createTour, getTour, updateTour, deleteTour} = require('../controllers/tourController')
 
 router
 	.route('/')
@@ -14,7 +10,7 @@ router
 router
 	.route('/:id')
 	.get(getTour)
-	.patch(checkBody, updateTour)
+	.patch(updateTour)
 	.delete(deleteTour)
 
 module.exports = router
