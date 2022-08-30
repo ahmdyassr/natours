@@ -17,8 +17,4 @@ app.use(pino())
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
 
-// START SERVER
-const port = 3000
-app.listen(port, () => {
-	console.log(`Server is listening on PORT: ${port}`)
-})
+module.exports = app

@@ -2,10 +2,9 @@
 	"name": "natours",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "app.js",
 	"scripts": {
-		"dev": "nodemon src/index.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"dev": "nodemon src/server.js"
 	},
 	"repository": {
 		"type": "git",
