@@ -10,11 +10,24 @@ const toursData = JSON.parse(
 
 const checkID = (req, res, next, val) => {
 	const id = parseInt(val)
-	console.log(`Tour id is ${id} and its type is: ${typeof(id )}`)
+	console.log(`Tour id is ${id} and its type is: ${typeof(id)}`)
 	if (id > toursData.length) {
 		return res.status(404).json({
 			status: 'fail',
 			message: 'Invalid ID!'
+		})
+	}
+
+	next()
+}
+
+const checkBody = (req, res, next) => {
+	const {name, price} = req.body
+
+	if ( !name || !price ) {
+		return res.status(500).json({
+			status: 'fail',
+			message: 'Tour price and name must be provided!'
 		})
 	}
 
@@ -98,6 +111,7 @@ const deleteTour = (req, res) => {
 
 module.exports = {
 	checkID,
+	checkBody,
 	getAllTours,
 	createTour,
 	getTour,

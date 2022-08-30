@@ -11,7 +11,12 @@ const app = express()
 app.use(express.json()) 
 
 // Logging
-app.use(pino())
+if (process.env.NODE_ENV === 'development') {
+	app.use(pino())
+}
+
+// Serve statice files
+app.use(express.static(`${__dirname}/public`))
 
 // ROUTES
 app.use('/api/v1/tours', tourRouter)
