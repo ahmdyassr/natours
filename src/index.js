@@ -1,18 +1,35 @@
 const fs = require('fs')
 const express = require('express')
+const pino = require('pino-http')
 const app = express()
 
-// Middlewares
-app.use(express.json()) // Insert incoming body request into req.body
-
-
+//
+// Database
+//
 const toursData = JSON.parse(
 	fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 )
 
+//
+// Middlewares
+//
+
+// Insert incoming body request into req.body
+app.use(express.json()) 
+
+
+// Logging
+app.use(pino())
+
+
+//
+// Route handlers
+//
+
 const getAllTours = (req, res) => {
 	res.status(200).json({
 		status: 'success',
+		requestedAt: req.requestTime,
 		results: toursData.length,
 		data: {
 			tours: toursData
@@ -98,6 +115,41 @@ const deleteTour = (req, res) => {
 	})
 }
 
+const getAllUsers = (req, res) => {
+	res.status(500).json({
+		status: 'error',
+		message: 'This route isn\'t yet defined!'
+	})
+}
+
+const createUser = (req, res) => {
+	res.status(500).json({
+		status: 'error',
+		message: 'This route isn\'t yet defined!'
+	})
+}
+
+const getUser = (req, res) => {
+	res.status(500).json({
+		status: 'error',
+		message: 'This route isn\'t yet defined!'
+	})
+}
+
+const updateUser = (req, res) => {
+	res.status(500).json({
+		status: 'error',
+		message: 'This route isn\'t yet defined!'
+	})
+}
+
+const deleteUser = (req, res) => {
+	res.status(500).json({
+		status: 'error',
+		message: 'This route isn\'t yet defined!'
+	})
+}
+
 app
 	.route('/api/v1/tours')
 	.get(getAllTours)
@@ -108,6 +160,17 @@ app
 	.get(getTour)
 	.patch(updateTour)
 	.delete(deleteTour)
+
+app
+	.route('/api/v1/users')
+	.get(getAllUsers)
+	.post(createUser)
+
+app	
+	.route('/api/v1/users/:id')
+	.get(getUser)
+	.patch(updateUser)
+	.delete(deleteUser)
 
 const port = 3000
 app.listen(port, () => {
