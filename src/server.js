@@ -1,12 +1,13 @@
 const path = require('path')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
-const app = require('./app')
 
 // GRAB ENV VARIABLES
 dotenv.config({
 	path: path.resolve(`${__dirname}/config.env`)
 })
+
+const app = require('./app')
 
 // CONNECT TO DB
 mongoose
