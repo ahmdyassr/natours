@@ -6,7 +6,9 @@ const tourSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 		unique: true,
-		trim: true
+		trim: true,
+		maxLength: 40,
+		minLength: 10
 	},
 	slug: {
 		type: String,
@@ -21,11 +23,14 @@ const tourSchema = new mongoose.Schema({
 	},
 	difficulty: {
 		type: String,
-		required: true
+		required: true,
+		enum: ['easy', 'medium', 'difficult']
 	},
 	ratingsAverage: {
 		type: Number,
-		default: 4.5
+		default: 4.5,
+		min: 1,
+		max: 5
 	},
 	ratingsQuantity: {
 		type: Number,
@@ -36,7 +41,14 @@ const tourSchema = new mongoose.Schema({
 		required: true
 	},
 	priceDicsount: {
-		type: Number
+		type: Number,
+		validate: {
+			validator: function(val) {
+				// <this> points to the current document on a new docuement creation
+				return val < this.price
+			},
+			message: 'Discount price should be below the regular price!'  
+		}
 	},
 	summary: {
 		type: String,
@@ -69,14 +81,13 @@ tourSchema.virtual('durationWeeks').get(function() {
 })
 
 // Document Middleware
-// Runs before the save command / create command
 tourSchema.pre('save', function(next) {
 	this.slug = slugify(this.name, {lower: true })
 
 	next( )
 })
 
-// Query Middleware
+// Query Middlewares
 tourSchema.pre(/^find/, function(next) {
 	this.find({
 		secretTour: { $ne: true }
@@ -89,6 +100,19 @@ tourSchema.pre(/^find/, function(next) {
 tourSchema.post(/^find/, function(docs, next) {
 	console.log(`Query took ${Date.now() - this.start} milliseconds! ⏰`)
 
+	next()
+})
+
+// Aggregation Middleware
+tourSchema.pre('aggregate', function(next) {
+	this.pipeline().unshift({
+		$match: {
+			secretTour: {
+				$ne: true
+			}
+		}
+	})
+ 
 	next()
 })
 
