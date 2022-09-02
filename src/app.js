@@ -35,5 +35,4 @@ app.all('*', (req, res, next) => {
 // Error Handling Middleware
 app.use(globalErrorHandler)
 
-
 module.exports = app 

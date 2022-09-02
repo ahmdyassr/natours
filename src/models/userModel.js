@@ -33,6 +33,7 @@ const userSchema = new mongoose.Schema({
 		}
 	},
 	photo: String,
+	passwordChangedAt: Date
 })
 
 // (Document Middleware) Hash the passowrd
@@ -53,6 +54,18 @@ userSchema.pre('save', async function(next) {
 // (Schema Method) Verify password
 userSchema.methods.verifyPassword = async function(clientPassword, userPassword) {
 	return await bcrypt.compare(clientPassword, userPassword)
+}
+
+userSchema.methods.changedPasswordAfterTokenIssued =  function(JWTtimeStamp) {
+	if (!this.passwordChangedAt) {
+		return false
+	}
+	
+	const changedTimeStamp = parseInt(
+		this.passwordChangedAt.getTime() / 1000,
+		10
+	)
+	return JWTtimeStamp < changedTimeStamp
 }
 
 const User = mongoose.model('User', userSchema)
