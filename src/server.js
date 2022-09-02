@@ -21,6 +21,25 @@ mongoose
 
 	
 // START SERVER
-app.listen(process.env.PORT, () => {
+const server = app.listen(process.env.PORT, () => {
 	console.log(`Server is listening on PORT: ${process.env.PORT}`)
+})
+
+// HANDLE REJECTED PROMISES
+process.on('unhandledRejection', (err) => {
+	console.log('Unhandled Rejection! 💣 Shutting down...')
+	console.log(err.name, err.message)
+
+	server.close( () => {
+		process.exit(1)
+	})
+})
+
+process.on('uncaughtException', (err) => {
+	console.log('Unhandled Exception! 💣 Shutting down...')
+	console.log(err.name, err.message)
+
+	server.close( () => {
+		process.exit(1)
+	})
 })
