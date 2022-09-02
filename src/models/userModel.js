@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 		minLength: 8,
+		select: false
 	},
 	passwordConfirm: {
 		type: String,
@@ -34,7 +35,7 @@ const userSchema = new mongoose.Schema({
 	photo: String,
 })
 
-// Document Middleware (Pre-hook on Saving the document)
+// (Document Middleware) Hash the passowrd
 userSchema.pre('save', async function(next) {
 
 	// Only run if password is modified
@@ -48,6 +49,11 @@ userSchema.pre('save', async function(next) {
 
 	next()
 })
+
+// (Schema Method) Verify password
+userSchema.methods.verifyPassword = async function(clientPassword, userPassword) {
+	return await bcrypt.compare(clientPassword, userPassword)
+}
 
 const User = mongoose.model('User', userSchema)
 
