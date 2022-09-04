@@ -14,6 +14,18 @@ const signToken = (id) => {
 	})
 }
 
+const createSendToken = (user, statusCode, res) => {
+	const token = signToken(user._id)
+	
+	res.status(201).json({
+		status: 'success',
+		token,
+		data: {
+			user
+		}
+	})
+}
+
 const signup = catchAsync(async (req, res, next) => {
 	const {name, email, password, passwordConfirm, passwordChangedAt, role} = req.body
 	
@@ -26,15 +38,7 @@ const signup = catchAsync(async (req, res, next) => {
 		role
 	})
 
-	const token = signToken(newUser._id)
-	
-	res.status(201).json({
-		status: 'success',
-		token,
-		data: {
-			user: newUser
-		}
-	})
+	createSendToken(newUser, 201, res)
 })
 
 const login = catchAsync(async (req, res, next) => {
@@ -61,12 +65,7 @@ const login = catchAsync(async (req, res, next) => {
 	}
 
 	// send back the token
-	const token = signToken(user._id)
-
-	res.status(200).json({
-		status: 'Success',
-		token
-	})
+	createSendToken(user, 200, res)
 })
 
 const protect = catchAsync(async (req, res, next) => {
@@ -178,12 +177,21 @@ const resetPassword = catchAsync(async (req, res, next) => {
 	await user.save()
 
 	// Log user in
-	const token = signToken(user._id)
-	
-	res.status(201).json({
-		status: 'success',
-		token
-	})
+	createSendToken(user, 201, res)
+})
+
+const updatePassword  = catchAsync(async (req, res, next) => {
+	const user = await User.findById(req.user.id).select('+password')
+ 
+	if (!(await user.verifyPassword(req.body.currentPassword, user.password))) {
+		return next(new AppError('Youd didn\'t provide the correct current password'))
+	}
+
+	user.password = req.body.password
+	user.passwordConfirm = req.body.password 
+	await user.save()
+
+	createSendToken(user, 201, res)
 })
 
 module.exports = {
@@ -192,5 +200,6 @@ module.exports = {
 	protect,
 	restrictTo,
 	forgotPassword,
-	resetPassword
+	resetPassword,
+	updatePassword 
 }
