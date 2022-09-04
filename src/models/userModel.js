@@ -10,6 +10,11 @@ const userSchema = new mongoose.Schema({
 		required: true,
 		trim: true
 	},
+	role: {
+		type: String,
+		enum: ['user', 'guide', 'lead-guide', 'admin'],
+		default: 'user'
+	},
 	email: {
 		type: String,
 		required: true,

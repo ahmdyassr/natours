@@ -13,14 +13,15 @@ const signToken = (id) => {
 }
 
 const signup = catchAsync(async (req, res, next) => {
-	const {name, email, password, passwordConfirm, passwordChangedAt} = req.body
+	const {name, email, password, passwordConfirm, passwordChangedAt, role} = req.body
 	
 	const newUser = await User.create({
 		name,
 		email,
 		password,
 		passwordConfirm,
-		passwordChangedAt
+		passwordChangedAt,
+		role
 	})
 
 	const token = signToken(newUser._id)
@@ -99,8 +100,21 @@ const protect = catchAsync(async (req, res, next) => {
 	next()
 })
 
+const restrictTo = (...roles) => {
+	return (req, res, next) => {
+		if (!roles.includes(req.user.role)) {
+			return next(
+				new AppError('You don\'t have permission to perform this task', 403)
+			)
+		}
+
+		next()
+	}
+}
+
 module.exports = {
 	signup,
 	login,
-	protect
+	protect,
+	restrictTo
 }
