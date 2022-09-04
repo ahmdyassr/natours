@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcrypt')
@@ -38,7 +39,9 @@ const userSchema = new mongoose.Schema({
 		}
 	},
 	photo: String,
-	passwordChangedAt: Date
+	passwordChangedAt: Date,
+	passwordResetToken: String,
+	passwordResetExpirationDuration: Date
 })
 
 // (Document Middleware) Hash the passowrd
@@ -71,6 +74,14 @@ userSchema.methods.changedPasswordAfterTokenIssued =  function(JWTtimeStamp) {
 		10
 	)
 	return JWTtimeStamp < changedTimeStamp
+}
+
+userSchema.methods.createPasswordResetToken = function() {
+	const resetToken = crypto.randomBytes(32).toString('hex')
+	this.passwordresetToken = crypto.createHash('sha256').update(resetToken).digest('hex')
+	this.passwordResetExpirationDuration = Date.now() + 10 * 60 * 1000
+
+	return resetToken
 }
 
 const User = mongoose.model('User', userSchema)
