@@ -1,7 +1,10 @@
 const express = require('express')
-const router = express.Router()
 const { createReview, getReviews } = require('../controllers/reviewController.js')
 const {protect, restrictTo} = require('../controllers/authController')
+
+const router = express.Router({
+	mergeParams: true
+})
 
 router
 	.route('/')
