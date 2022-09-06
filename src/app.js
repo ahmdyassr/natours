@@ -32,7 +32,7 @@ app.use('/api', limiter)
 
 // Insert incoming body request into req.body
 app.use(express.json({
-	limit: '10kb '
+	limit: '2MB'
 })) 
 
 // Data Sanitization
