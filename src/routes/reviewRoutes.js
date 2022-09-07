@@ -17,7 +17,7 @@ router
 	.route('/:id')
 	.get(getReview)
 	.patch(restrictTo('admin', 'user'), updateReview)
-	.deleterestrictTo('admin', 'user'), (deleteReview)
+	.delete(restrictTo('admin', 'user'), deleteReview)
 	
 
 module.exports = router
