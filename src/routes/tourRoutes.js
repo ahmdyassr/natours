@@ -1,5 +1,5 @@
 const express = require('express')
-const {aliasTopTours, getTourStats, getMonthlyPlan, getAllTours, createTour, getTour, updateTour, deleteTour} = require('../controllers/tourController')
+const {aliasTopTours, getTourStats, getMonthlyPlan, getAllTours, createTour, getTour, updateTour, deleteTour, getToursWithin} = require('../controllers/tourController')
 const reviewRouter = require('../routes/reviewRoutes')
 const {protect, restrictTo} = require('../controllers/authController')
 const router = express.Router()
@@ -10,6 +10,10 @@ router
 router
 	.route('/top-5-cheap')
 	.get(aliasTopTours, getAllTours)
+
+router
+	.route('/tours-within/:distance/center/:latlng/unit/:unit')
+	.get(getToursWithin)
 
 router
 	.route('/stats' )
