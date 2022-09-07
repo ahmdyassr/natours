@@ -15,6 +15,11 @@ const filterObj = (obj, ...allowedFields) => {
 	return newObj
 }
 
+const getMe = (req, res, next) => {
+	req.params.id = req.user.id
+	next()
+}
+
 const updateMe = catchAsync(async (req, res, next) => {
 	if (req.body.password || req.body.passwordConfirm) {
 		return next(new AppError('This rount isn\'t for password updates!!', 400))
@@ -58,5 +63,6 @@ module.exports = {
 	deleteMe,
 	getUser,
 	updateUser,
-	deleteUser
+	deleteUser,
+	getMe
 }

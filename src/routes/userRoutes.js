@@ -1,7 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const {getAllUsers, createUser, getUser, updateUser, deleteUser, updateMe, deleteMe} = require('../controllers/userController')
+const {getAllUsers, createUser, getUser, updateUser, deleteUser, getMe, updateMe, deleteMe} = require('../controllers/userController')
 const {signup, login, forgotPassword, resetPassword, updatePassword, protect} = require('../controllers/authController')
+
+router
+	.get('/me', protect, getMe, getUser) 
 
 router
 	.post('/signup', signup)
