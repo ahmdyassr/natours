@@ -1,8 +1,8 @@
 const express = require('express')
-const router = express.Router()
 const {aliasTopTours, getTourStats, getMonthlyPlan, getAllTours, createTour, getTour, updateTour, deleteTour} = require('../controllers/tourController')
 const reviewRouter = require('../routes/reviewRoutes')
 const {protect, restrictTo} = require('../controllers/authController')
+const router = express.Router()
 
 router
 	.use('/:tourId/reviews', reviewRouter)
@@ -29,9 +29,5 @@ router
 	.get(getTour)
 	.patch(updateTour)
 	.delete(protect, restrictTo('admin'), deleteTour)
-
-// router
-// 	.route('/:tourId/reviews')
-// 	.post(protect, restrictTo('user'), createReview)
 
 module.exports = router

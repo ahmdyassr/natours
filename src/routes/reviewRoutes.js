@@ -1,5 +1,5 @@
 const express = require('express')
-const { createReview, getReviews } = require('../controllers/reviewController.js')
+const { createReview, getReviews, deleteReview } = require('../controllers/reviewController.js')
 const {protect, restrictTo} = require('../controllers/authController')
 
 const router = express.Router({
@@ -8,7 +8,11 @@ const router = express.Router({
 
 router
 	.route('/')
-	.post(protect, restrictTo('user'), createReview)
 	.get(getReviews)
+	.post(protect, restrictTo('user'), createReview)
+
+router
+	.route('/:id')
+	.delete(deleteReview)
 
 module.exports = router
