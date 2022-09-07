@@ -11,7 +11,7 @@ router.use(protect)
 router
 	.route('/')
 	.get(getReviews)
-	.post(restrictTo('user'), setTourUserId, createReview)
+	.post(restrictTo('admin', 'user'), setTourUserId, createReview)
 
 router
 	.route('/:id')
