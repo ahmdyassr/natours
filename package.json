@@ -31,6 +31,7 @@
 		"mongoose": "^6.5.3",
 		"nodemailer": "^6.7.8",
 		"pino-http": "^8.2.0",
+		"pug": "^3.0.2",
 		"slugify": "^1.6.5",
 		"validator": "^13.7.0"
 	},

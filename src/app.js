@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express')
 const pino = require('pino-http')
 const rateLimit = require('express-rate-limit')
@@ -13,6 +14,13 @@ const reviewRouter = require('./routes/reviewRoutes')
 const app = express()
 
 // MIDDLEWARES
+
+// Set template engine
+app.set('view engine', 'pug')
+app.set('views', path.join(__dirname, 'views'))
+
+// Serve statice files
+app.use(express.static(path.join(__dirname, 'public')))
 
 // Secure http headers
 app.use(helmet())
@@ -39,10 +47,11 @@ app.use(express.json({
 // Data Sanitization
 app.use(mongoSanitize())
 
-// Serve statice files
-app.use(express.static(`${__dirname}/public`))
-
 // ROUTES
+app.get('/', (req, res) => {
+	res.status(200).render('base')
+})
+
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/reviews', reviewRouter)
